@@ -1,0 +1,4 @@
+ansible_user: root
+kube_namespace: game-server
+kube_config_path: /root/.kube/config
+

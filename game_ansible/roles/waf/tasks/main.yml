@@ -1,0 +1,21 @@
+- name: Allow external port
+  shell: |
+    firewall-cmd --permanent --add-port={{ container_port }}/tcp
+    firewall-cmd --reload
+
+- name: Add DNAT rule
+  shell: |
+    firewall-cmd --permanent --direct --add-rule ipv4 nat PREROUTING 0 -p tcp --dport {{ container_port }} -j DNAT --to-destination 192.168.100.61:{{ container_port }}
+    firewall-cmd --reload
+
+- name: Add MASQUERADE rule
+  shell: |
+    firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -o eth0 -j MASQUERADE
+    firewall-cmd --reload
+
+- name: Enable IP forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    state: present
+    reload: yes

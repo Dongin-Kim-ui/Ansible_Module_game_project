@@ -1,0 +1,10 @@
+frontend {{ app_name }}_frontend
+    bind *:{{ container_port }}
+    default_backend {{ app_name }}_backend
+
+backend {{ app_name }}_backend
+    balance roundrobin
+    server worker1 192.168.100.53:{{ node_port }} check
+    server worker2 192.168.100.54:{{ node_port }} check
+    server worker3 192.168.100.55:{{ node_port }} check
+

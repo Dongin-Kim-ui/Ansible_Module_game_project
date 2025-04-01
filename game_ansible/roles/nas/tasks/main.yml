@@ -1,0 +1,26 @@
+- name: Ensure log directory exists
+  file:
+    path: "{{ log_storage_path }}"
+    state: directory
+    mode: '0777'
+
+- name: Collect logs from pods
+  shell: |
+    for pod in $(kubectl get pods -n game-server -l app={{ app_name }} -o jsonpath='{.items[*].metadata.name}'); do
+      kubectl logs -n game-server $pod > "{{ log_storage_path }}/$pod.log"
+    done
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+- name: Ensure backup directory exists
+  file:
+    path: "{{ backup_storage_path }}"
+    state: directory
+    mode: '0777'
+
+- name: Archive game data
+  shell: |
+    tar -czf "{{ backup_storage_path }}/game-backup-$(date +'%Y%m%d-%H%M%S').tar.gz" -C /app/data .
+  args:
+    executable: /bin/bash

@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - import_role:
+        name: k8s_deploy
+    - import_role:
+        name: nas
+    - import_role:
+        name: haproxy
+    - import_role:
+        name: waf

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ deployment_name }}
+  namespace: game-server
+  labels:
+    app: {{ app_name }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{ app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ app_name }}
+    spec:
+      containers:
+        - name: {{ app_name }}
+          image: {{ container_image }}
+          ports:
+            - containerPort: {{ container_port }}
+          volumeMounts:
+            - name: game-data
+              mountPath: /app/data
+            - name: game-logs
+              mountPath: /app/logs
+      volumes:
+        - name: game-data
+          persistentVolumeClaim:
+            claimName: game-data-pvc
+        - name: game-logs
+          persistentVolumeClaim:
+            claimName: game-logs-pvc

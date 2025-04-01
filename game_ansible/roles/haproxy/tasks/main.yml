@@ -1,0 +1,16 @@
+- name: Install HAProxy
+  package:
+    name: haproxy
+    state: present
+
+- name: Configure HAProxy
+  blockinfile:
+    path: "{{ haproxy_config_path }}"
+    block: "{{ lookup('template', 'haproxy.cfg.j2') }}"
+    marker: "# {mark} Ansible managed block - {{ app_name }}"
+  notify: Restart HAProxy
+
+- name: Open HAProxy port
+  shell: |
+    firewall-cmd --permanent --add-port={{ container_port }}/tcp
+    firewall-cmd --reload

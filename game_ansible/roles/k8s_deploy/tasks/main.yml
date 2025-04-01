@@ -1,0 +1,23 @@
+- name: Create Deployment YAML
+  template:
+    src: deployment.yaml.j2
+    dest: "/kube/game/{{ game_name }}-deployment.yaml"
+
+- name: Create Service YAML
+  template:
+    src: service.yaml.j2
+    dest: "/kube/game/{{ game_name }}-service.yaml"
+
+- name: Create Ingress YAML
+  template:
+    src: ingress.yaml.j2
+    dest: "/kube/game/{{ game_name }}-ingress.yaml"
+
+- name: Apply Deployment
+  command: kubectl apply -f /kube/game/{{ game_name }}-deployment.yaml
+
+- name: Apply Service
+  command: kubectl apply -f /kube/game/{{ game_name }}-service.yaml
+
+- name: Apply Ingress
+  command: kubectl apply -f /kube/game/{{ game_name }}-ingress.yaml

@@ -1,0 +1,4 @@
+ansible_user: root
+log_mount_path: /mnt/game-pool/gamelogs
+data_mount_path: /mnt/game-pool/gamedata
+
